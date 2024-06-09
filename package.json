@@ -1,23 +1,35 @@
 {
-  "name": "inspiredIT LMS backend",
+  "name": "InspiredIT",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:migrate:undo": "npx sequelize-cli db:migrate:undo",
+    "db:seed": "npx sequelize-cli db:seed:all",
+    "db:seed:file": "npx sequelize-cli db:seed --seed",
+    "db:seed:undo": "npx sequelize-cli db:seed:undo:all",
+    "db:seed:generate": "npx sequelize-cli seed:generate --name",
+    "db:migrate:generate": "npx sequelize-cli migration:generate --name"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "sequelize": "^6.37.3",
+    "inspiredIT LMS backend": "link:",
     "pg": "^8.11.0",
-    "pg-hstore": "^2.3.4"
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.3",
+    "slugify": "^1.6.6"
   },
   "devDependencies": {
-    "nodemon": "^3.1.3"
+    "nodemon": "^3.1.3",
+    "sequelize-cli": "^6.6.2"
   }
 }

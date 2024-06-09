@@ -1,19 +1,27 @@
-const { types } = require("pg");
-const { DataTypes } = require("sequelize");
-
-module.exports = (sequelize, Sequelize) => {
-  const User = sequelize.define(
-    "User",
+module.exports = (sequelize, DataTypes, Model) => {
+  class User extends Model {}
+  User.init(
     {
-      id: {
+      UserID: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
-      username: {
+      first_name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: false,
+        validate: {
+          isAlpha: true,
+        },
+      },
+      last_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: false,
+        validate: {
+          isAlpha: true,
+        },
       },
       email: {
         type: DataTypes.STRING,
@@ -28,12 +36,13 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
       },
       UserType: {
-        types: DataTypes.ENUM,
-
+        type: DataTypes.ENUM("student", "instructor"),
         allowNull: false,
       },
     },
     {
+      sequelize,
+      modelName: "User",
       tableName: "users",
       timestamps: true,
     }
