@@ -22,7 +22,7 @@ if (config.use_env_variable) {
 // Manually require and initialize each model
 const User = require("./user")(sequelize, DataTypes, Model);
 const Payment = require("./payment")(sequelize, DataTypes, Model);
-// const Result = require("./result")(sequelize, DataTypes, Model);
+const Result = require("./result")(sequelize, DataTypes, Model);
 const Quiz = require("./quiz")(sequelize, DataTypes, Model);
 const { Course, CourseContent, Enrollment } = require("./course")(
   sequelize,
@@ -40,25 +40,38 @@ Object.assign(db, {
   User,
   Enrollment,
   Payment,
-  // Result,
+  Result,
   Quiz,
 });
-// Define associations after all models have been imported
-// //course can have many course content
-Course.hasMany(CourseContent, { foreignKey: "courseID" });
-CourseContent.belongsTo(Course, { foreignKey: "courseID" });
 
-// // //a course can have multiple enrollment
-Course.hasMany(Enrollment, { foreignKey: "courseID" });
-Enrollment.belongsTo(Course, { foreignKey: "courseID" });
+// Define associations
+// User and Course (Many-to-Many through Enrollment)
+User.belongsToMany(Course, { through: Enrollment, foreignKey: "UserID" });
+Course.belongsToMany(User, { through: Enrollment, foreignKey: "courseID" });
 
-// // // a user can have multiple enrollments
-User.hasMany(Enrollment, { foreignKey: "UserID" });
-Enrollment.belongsTo(User, { foreignKey: "UserID" });
-
-// Define associations Payment
+// User and Payment (One-to-Many)
 User.hasMany(Payment, { foreignKey: "UserID", onDelete: "CASCADE" });
 Payment.belongsTo(User, { foreignKey: "UserID" });
+
+// User and Result (One-to-Many)
+User.hasMany(Result, { foreignKey: "UserID", onDelete: "CASCADE" });
+Result.belongsTo(User, { foreignKey: "UserID" });
+
+// Course and Enrollment (One-to-Many)
+Course.hasMany(Enrollment, { foreignKey: "courseID", onDelete: "CASCADE" });
+Enrollment.belongsTo(Course, { foreignKey: "courseID" });
+
+// Course and CourseContent (One-to-Many)
+Course.hasMany(CourseContent, { foreignKey: "courseID", onDelete: "CASCADE" });
+CourseContent.belongsTo(Course, { foreignKey: "courseID" });
+
+// Course and Result (One-to-Many)
+Course.hasMany(Result, { foreignKey: "CourseID", onDelete: "CASCADE" });
+Result.belongsTo(Course, { foreignKey: "CourseID" });
+
+// Result and Quiz (Many-to-One)
+Quiz.hasMany(Result, { foreignKey: "QuizID", onDelete: "CASCADE" });
+Result.belongsTo(Quiz, { foreignKey: "QuizID" });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
