@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-
+const db = require("./models");
+const errorHandler = require("./middleware/errorHandler");
 const app = express();
 
 var corsOptions = {
@@ -15,7 +16,6 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-const db = require("./models");
 db.sequelize
   .sync()
   .then(() => {
@@ -35,8 +35,8 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to InspireIT application." });
 });
 
-require("./route/user")(app);
-
+require("./routes/user")(app);
+app.use(errorHandler);
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

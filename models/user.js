@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes, Model) => {
       },
       last_name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: false,
         validate: {
           isAlpha: true,
